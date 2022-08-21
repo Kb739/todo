@@ -1,9 +1,9 @@
 import React from "react";
 
-function Category() {
+function Category(props) {
     return (
         <h4>
-            list title
+            {props.label}
         </h4>
     )
 }

@@ -1,17 +1,22 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Category from './category'
+
+import { tasksContext } from './contexts/context'
+
 function Sidebar() {
+    const { tasks, categories } = useContext(tasksContext)
+    const elements = categories.map(category => {
+        return (
+            <li className='category'>
+                <Category label={category} />
+            </li >
+        )
+    })
+
     return (
         <div className='sidebar'>
             <ul className='list'>
-                <li className='category'><Category /></li>
-                <li className='category'><Category /></li>
-                <li className='category'><Category /></li>
-            </ul>
-            <ul className='list'>
-                <li className='category'><Category /></li>
-                <li className='category'><Category /></li>
-                <li className='category'><Category /></li>
+                {elements}
             </ul>
         </div>
     )
