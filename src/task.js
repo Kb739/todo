@@ -1,10 +1,10 @@
 import React from "react";
 
-function Task() {
+function Task(props) {
     return (
         <>
             <h4>
-                task name
+                {props.label}
             </h4>
         </>
     )

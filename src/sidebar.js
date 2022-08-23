@@ -4,11 +4,12 @@ import Category from './category'
 import { tasksContext } from './contexts/context'
 
 function Sidebar() {
-    const { tasks, categories } = useContext(tasksContext)
+    const { displayTasks, categories } = useContext(tasksContext)
     const elements = categories.map(category => {
+        const classes = `category ${category.selected ? 'select' : ''}`
         return (
-            <li className='category'>
-                <Category label={category} />
+            <li className={classes}>
+                <Category label={category.title} />
             </li >
         )
     })
