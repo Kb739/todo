@@ -5,9 +5,10 @@ import { tasksContext } from './contexts/context'
 function Content() {
     const { displayTasks } = useContext(tasksContext)
     const taskElements = displayTasks.map(task => {
-        const classname = `task ${task.selected ? 'select' : ''}`
+        const classname = `task`
         return (
-            <li className={classname}><Task label={task.title} /></li>
+            <li key={task.id} className={classname} >
+                <Task label={task.title} /></li>
         )
     })
     return (

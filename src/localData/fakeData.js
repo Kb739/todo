@@ -1,36 +1,32 @@
+import { nanoid } from "nanoid"
 const allTasks = [
     {
-        id: new Date(),
+        id: nanoid(),
         title: "milk",
         description: "long ass description",
         category: "groceries",
-        selected: false
     },
     {
-        id: new Date(),
+        id: nanoid(),
         title: "visit dentist",
         description: "",
         category: "with friend",
-        selected: false
     },
     {
-        id: new Date(),
+        id: nanoid(),
         title: "teach basics of js",
         description: "don't spend too long",
         category: "with friend",
-        selected: false
     }
 ]
 const allCategories = [
     {
-        id: new Date(),
+        id: nanoid(),
         title: "groceries",
-        selected: true
     },
     {
-        id: new Date(),
+        id: nanoid(),
         title: "with friend",
-        selected: false
     }
 ]
 export { allTasks, allCategories }
