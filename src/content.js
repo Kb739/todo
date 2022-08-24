@@ -1,14 +1,14 @@
 import React, { useContext } from 'react'
-import Task from './task'
+import Card from './card'
 import { tasksContext } from './contexts/context'
 
 function Content() {
     const { displayTasks } = useContext(tasksContext)
     const taskElements = displayTasks.map(task => {
-        const classname = `task`
+        const classname = `card card--task`
         return (
             <li key={task.id} className={classname} >
-                <Task label={task.title} /></li>
+                <Card label={task.title} /></li>
         )
     })
     return (
@@ -16,7 +16,7 @@ function Content() {
             <h1>
                 category title
             </h1>
-            <ul className='list'>
+            <ul className='card-container'>
                 {taskElements}
             </ul>
         </div>

@@ -1,52 +1,52 @@
 import { nanoid } from 'nanoid'
 import React, { useContext, useEffect, useState } from 'react'
-import Category from './category'
+import Card from './card'
 import taskFilters from "./localData/filters"
 
 import { tasksContext } from './contexts/context'
 
 function Sidebar() {
     const [selectedFilter, setSelectedFilter] = useState(null)
-    const { categories, selectCategory, filterTasksByFunc, selectedCategory } = useContext(tasksContext)
+    const { lists, selectList, filterTasksByFunc, selectedList } = useContext(tasksContext)
 
 
-    const categoriesElements = categories.map(category => {
-        const classes = `category ${category.id === selectedCategory ? 'select' : ''}`
+    const listsElements = lists.map(list => {
+        const classes = `card card--list ${list.id === selectedList ? 'select' : ''}`
         return (
             <li key={nanoid()} className={classes} onClick={() => {
                 setSelectedFilter(null)
-                selectCategory(category.id)
+                selectList(list.id)
             }}>
-                <Category label={category.title} />
+                <Card label={list.title} />
             </li >
         )
     })
 
     const filtersElements = taskFilters.map(filter => {
-        const classes = `category ${filter.id === selectedFilter ? 'select' : ''}`
+        const classes = `card card--list ${filter.id === selectedFilter ? 'select' : ''}`
         return (
             <li key={filter.id} className={classes} onClick={() => {
-                selectCategory(null)
+                selectList(null)
                 setSelectedFilter(filter.id)
             }}>
-                <Category label={filter.label} />
+                <Card label={filter.label} />
             </li >
         )
     })
 
     useEffect(() => {
-        const foundFilter = taskFilters.find(filter => selectedFilter === filter.id)
-        if (foundFilter)
-            filterTasksByFunc(foundFilter.fn)
+        const _filter = taskFilters.find(filter => selectedFilter === filter.id)
+        if (_filter)
+            filterTasksByFunc(_filter.fn)
     }, [selectedFilter])
 
     return (
         <div className='sidebar'>
-            <ul className='list'>
+            <ul className='card-container'>
                 {filtersElements}
             </ul>
-            <ul className='list'>
-                {categoriesElements}
+            <ul className='card-container'>
+                {listsElements}
             </ul>
         </div>
     )

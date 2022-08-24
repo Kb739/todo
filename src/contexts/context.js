@@ -1,4 +1,4 @@
-import { allTasks, allCategories } from "../localData/fakeData"
+import { allTasks, allLists } from "../localData/fakeData"
 import React, { useState, createContext, useEffect } from "react";
 import { nanoid } from "nanoid";
 const tasksContext = createContext();
@@ -6,17 +6,17 @@ const tasksContext = createContext();
 function TasksProvider(props) {
 
     const [tasks, setTasks] = useState(allTasks)
-    const [categories, setCategories] = useState(allCategories)
+    const [lists, setLists] = useState(allLists)
     const [displayTasks, setDisplayTasks] = useState([])
 
-    const [selectedCategory, setSelectedCategory] = useState(null)
+    const [selectedList, setSelectedList] = useState(null)
 
-    function selectCategory(id) {
-        setSelectedCategory(id)
+    function selectList(id) {
+        setSelectedList(id)
     }
 
-    function filterTasksByCategory(categoryName) {
-        const filteredTasks = tasks.filter(task => task.category === categoryName)
+    function filterTasksByList(listName) {
+        const filteredTasks = tasks.filter(task => task.category === listName)
         setDisplayTasks(filteredTasks)
     }
 
@@ -26,15 +26,20 @@ function TasksProvider(props) {
         setDisplayTasks(filteredTasks)
     }
 
+    function addNewList(obj) {
+        //api call to create tasks
+        //then(fetch data).then(setSelectedList(data[0].id),setTasks(data))
+    }
+
     useEffect(() => {
-        const foundCategory = categories.find(category => category.id === selectedCategory)
-        if (foundCategory) {
-            filterTasksByCategory(foundCategory.title)
+        const _list = lists.find(list => list.id === selectedList)
+        if (_list) {
+            filterTasksByList(_list.title)
         }
-    }, [selectedCategory])
+    }, [selectedList])
 
     return (
-        <tasksContext.Provider value={{ displayTasks, categories, selectCategory, selectedCategory, filterTasksByFunc }}>
+        <tasksContext.Provider value={{ displayTasks, lists, selectList, selectedList, filterTasksByFunc }}>
             {props.children}
         </tasksContext.Provider>
     )

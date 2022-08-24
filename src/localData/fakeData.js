@@ -19,7 +19,7 @@ const allTasks = [
         category: "with friend",
     }
 ]
-const allCategories = [
+const allLists = [
     {
         id: nanoid(),
         title: "groceries",
@@ -29,4 +29,4 @@ const allCategories = [
         title: "with friend",
     }
 ]
-export { allTasks, allCategories }
+export { allTasks, allLists }
