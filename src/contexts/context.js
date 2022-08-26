@@ -1,14 +1,13 @@
-import { allTasks, allLists } from "../localData/fakeData"
 import React, { useState, createContext, useEffect } from "react";
 import { nanoid } from "nanoid";
 const tasksContext = createContext();
 
 function TasksProvider(props) {
 
-    const [tasks, setTasks] = useState(allTasks)
-    const [lists, setLists] = useState(allLists)
+    const [tasks, setTasks] = useState([])
+    const [lists, setLists] = useState([])
     const [displayTasks, setDisplayTasks] = useState([])
-
+    const [loading, setLoading] = useState(true)
     const [selectedList, setSelectedList] = useState(null)
 
     function selectList(id) {
@@ -26,10 +25,39 @@ function TasksProvider(props) {
         setDisplayTasks(filteredTasks)
     }
 
-    function addNewList(obj) {
-        //api call to create tasks
-        //then(fetch data).then(setSelectedList(data[0].id),setTasks(data))
+    async function addNewList(newList) {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(newList)
+        }
+        console.log(requestOptions.body)
+        try {
+            const response = await fetch('http://localhost:5000/lists', requestOptions)
+            const newList = await response.json()
+            selectList(newList.id)
+            setLoading(true)
+        } catch (err) {
+            console.log(`request unsuccessful : ${err}`)
+        }
     }
+
+    async function fetchLists() {
+        setLoading(false)
+        try {
+            const response = await fetch('http://localhost:5000/lists')
+            const lists = await response.json()
+            setLists(lists)
+        } catch (err) {
+            console.log(`request unsuccessful : ${err}`)
+        }
+    }
+
+    useEffect(() => {
+        if (loading) {
+            fetchLists()
+        }
+    }, [loading])
 
     useEffect(() => {
         const _list = lists.find(list => list.id === selectedList)
@@ -39,7 +67,7 @@ function TasksProvider(props) {
     }, [selectedList])
 
     return (
-        <tasksContext.Provider value={{ displayTasks, lists, selectList, selectedList, filterTasksByFunc }}>
+        <tasksContext.Provider value={{ displayTasks, lists, selectList, selectedList, filterTasksByFunc, addNewList }}>
             {props.children}
         </tasksContext.Provider>
     )
