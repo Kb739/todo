@@ -2,13 +2,13 @@ import { nanoid } from 'nanoid'
 import React, { useContext, useEffect, useState } from 'react'
 import Card from './card'
 import taskFilters from "./localData/filters"
-
+import ListForm from "./listForm"
 import { tasksContext } from './contexts/context'
 
 function Sidebar() {
     const [selectedFilter, setSelectedFilter] = useState(null)
     const { lists, selectList, filterTasksByFunc, selectedList } = useContext(tasksContext)
-
+    const [input, setInput] = useState(false)
 
     const listsElements = lists.map(list => {
         const classes = `card card--list ${list.id === selectedList ? 'select' : ''}`
@@ -48,6 +48,10 @@ function Sidebar() {
             <ul className='card-container'>
                 {listsElements}
             </ul>
+            <button onClick={() => setInput(true)}>
+                Add list
+            </button>
+            {input ? <ListForm submit={() => setInput(false)} /> : ''}
         </div>
     )
 }
