@@ -40,6 +40,10 @@ body {
     background-color: cyan;
 }
 
+.content--tasks {
+    flex-grow: 1;
+}
+
 .content>h1 {
     color: white;
 }

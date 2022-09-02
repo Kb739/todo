@@ -1,39 +1,48 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
+import { tasksContext } from './contexts/context'
+
 function TaskForm(props) {
-    const [taskInfo, setTaskInfo] = useState(props.task)
+    const { lists, getSelectedList, addTask } = useContext(tasksContext)
+    const { factoryTask } = getSelectedList()
+
+    const [taskInfo, setTaskInfo] = useState(factoryTask)
+    const listSelectOptions = lists.containers.map(list => <option key={list.id} value={list.title}>{list.title}</option>)
 
     function handleChange(event) {
         const { name, value } = event.target
-        setListInfo(prevInfo => {
+        setTaskInfo(prevInfo => {
             return {
                 ...prevInfo,
                 [name]: value
             }
         })
     }
-    async function handleSubmit(event) {
+
+    function handleSubmit(event) {
         event.preventDefault();
-        await addNewList(listInfo)
-        props.submit()
+        addTask(taskInfo)
+        props.close()
     }
     return (
         <div className='form--container'>
-            <form className='form' onSubmit={(event) => handleSubmit(event)}>
+            <form className='form' onSubmit={handleSubmit}>
                 <section>
                     <label className='input'>
                         <h4 className='input--label'>Name:</h4>
-                        <input type='text' name="title" value={listInfo.title} onChange={handleChange} className='textbox' />
+                        <input type='text' name="title" value={taskInfo.title} onChange={handleChange} className='textbox' />
                     </label>
                     <label className='input'>
                         <h4 className='input--label'>Description:</h4>
-                        <textarea name="description" value={listInfo.description} onChange={handleChange}
+                        <textarea name="description" value={taskInfo.description} onChange={handleChange}
                             rows={4} placeholder='description' className='textbox' />
                     </label>
                     {
-                        taskInfo.list ? ''
+                        factoryTask.parentList ? ''
                             : <label>
                                 <h4>parentList:</h4>
-                                <input type="selection" />
+                                <select name='parentList' value='default' onChange={handleChange} >
+                                    {listSelectOptions}
+                                </select>
                             </label>
                     }
                 </section>
@@ -43,4 +52,4 @@ function TaskForm(props) {
 
     )
 }
-export default ListForm
+export default TaskForm

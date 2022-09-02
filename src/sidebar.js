@@ -1,4 +1,3 @@
-import { nanoid } from 'nanoid'
 import React, { useContext } from 'react'
 import Card from './card'
 import ListForm from "./listForm"
@@ -6,13 +5,18 @@ import useToggle from './customHooks/switch'
 import { tasksContext } from './contexts/context'
 
 function Sidebar() {
-    const { lists } = useContext(tasksContext)
+    const { lists, selections, selectList } = useContext(tasksContext)
     const { on, toggle } = useToggle(false)
 
-    const listElements = lists.map(list => {
-        const classes = `card card--list ${list.id === selection.id ? 'select' : ''}`
+    const combinedList = Object.keys(lists).reduce((_list, key) => {
+        return _list.concat(lists[key])
+    }, [])
+
+    const listElements = combinedList.map(list => {
+
+        const classes = `card card--list ${list.id === selections.listID ? 'select' : ''}`
         return (
-            <li key={nanoid()} className={classes} onClick={() => {
+            <li key={list.id} className={classes} onClick={() => {
                 selectList(list.id)
             }}>
                 <Card label={list.title} />

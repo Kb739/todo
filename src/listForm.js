@@ -16,10 +16,10 @@ function ListForm(props) {
             }
         })
     }
-    async function handleSubmit(event) {
+    function handleSubmit(event) {
         event.preventDefault();
-        await addNewList(listInfo)
-        props.submit()
+        addNewList(listInfo)
+        props.close()
     }
     return (
         <div className='form--container'>

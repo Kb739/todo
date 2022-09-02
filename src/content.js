@@ -6,25 +6,27 @@ import useToggle from './customHooks/switch'
 import { tasksContext } from './contexts/context'
 
 function Content() {
-    const { tasks, lists, selectedList } = useContext(tasksContext)
+    const { tasks, selections, getSelectedList, selectTask } = useContext(tasksContext)
     const { on, toggle } = useToggle(false);
-    const _list = lists.find(list => list.id === selectedList)
 
     function filterTasks() {
-        return tasks.filter(_list.filterMethod)
+        const selectedList = getSelectedList();
+        return selectedList ? tasks.filter(selectedList.filterMethod) : [];
     }
 
     const taskElements = filterTasks().map(task => {
-        const classname = `card card--task`
+        const classname = `card card--task ${task.id === selections.taskID ? 'select' : ''}`
         return (
-            <li key={nanoid()} className={classname} >
+            <li key={task.id} className={classname} onClick={() => {
+                selectTask(task.id);
+            }} >
                 <Card label={task.title} /></li>
         )
     })
 
     return (
         <div className='content'>
-            <section>
+            <section className='content--tasks'>
                 <h1>
                     category title
                 </h1>
@@ -32,7 +34,7 @@ function Content() {
                     {taskElements}
                 </ul>
             </section>
-            <button onClick={toggle}>Add Task</button>
+            {selections.listID ? <button className='add' onClick={toggle}>Add Task</button> : ''}
             {on ? <TaskForm close={toggle} /> : ''}
         </div>
     )

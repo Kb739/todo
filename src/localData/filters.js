@@ -8,23 +8,18 @@ const defaultTask = {
 }
 
 const allFilters = {
-    "Important": {
-        filterMethod: task => task.isImportant,
-        factoryTask: {
-            ...defaultTask,
-            isImportant: true
-        }
-    },
-    "My Day": {
-        filterMethod: task => task.onMyDay,
-        factoryTask: {
-            ...defaultTask,
-            forToday: true
+    custom: {
+        "Important": {
+            filterMethod: task => task.isImportant,
+            factoryTask: {
+                ...defaultTask,
+                isImportant: true
+            }
         }
     },
     default: (Title) => {
         return {
-            filterMethod: task => task.title === Title,
+            filterMethod: task => task.parentList === Title,
             factoryTask: {
                 ...defaultTask,
                 parentList: Title

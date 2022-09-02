@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 import React, { useState, createContext, useEffect } from "react";
 import allFilters from "../localData/filters"
 
@@ -5,63 +6,98 @@ const tasksContext = createContext();
 function TasksProvider(props) {
 
     const [tasks, setTasks] = useState([])
-    const [lists, setLists] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [selectedList, setSelectedList] = useState(null)
+    const [lists, setLists] = useState({ filters: [], containers: [] })
+    const [loading, setLoading] = useState(false)
+    const [selections, setSelections] = useState({ listID: null, taskID: null })
 
     function selectList(id) {
-        setSelectedList(id)
-    }
-
-    async function addNewList(newList) {
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify(newList)
-        }
-        console.log(requestOptions.body)
-        try {
-            const response = await fetch('http://localhost:5000/lists', requestOptions)
-            const newList = await response.json()
-            selectList(newList.id)
-            setLoading(true)
-        } catch (err) {
-            console.log(`request unsuccessful : ${err}`)
+        const { listID } = selections;
+        if (!listID || listID !== id) {
+            setSelections({ listID: id, taskID: null })
         }
     }
 
-    async function fetchLists() {
+    function selectTask(id) {
+        const { taskID } = selections;
+        if (!taskID || taskID !== id)
+            setSelections(prev => ({ ...prev, taskID: id }))
+    }
+
+    function getSelectedList() {
+        const combinedList = lists.filters.concat(lists.containers)
+        return combinedList.find(list => list.id === selections.listID)
+    }
+
+    function addNewList(newList) {
+        const prev = JSON.parse(localStorage.getItem('lists'))
+        const updatedList = {
+            ...prev,
+            containers: [...prev.containers, { ...newList, id: nanoid() }]
+        }
+        localStorage.setItem('lists', JSON.stringify(updatedList))
+        setLoading(true)
+    }
+
+    function fetchLists() {
         setLoading(false)
-        try {
-            const response = await fetch('http://localhost:5000/lists')
-            const lists = await response.json()
-            setLists(() => (
+        const lists = JSON.parse(localStorage.getItem('lists'));
+        console.log(lists)
+        setLists(() => (
+            {
+                filters: lists.filters.map(list => ({
+                    ...list,
+                    ...allFilters.custom[list.title]
+                })),
+                containers: lists.containers.map(list => ({
+                    ...list,
+                    ...allFilters.default(list.title)
+                }))
+            }
+        ))
+
+    }
+
+    function addTask(newTask) {
+        const allTasks = JSON.parse(localStorage.getItem('tasks'))
+        localStorage.setItem('tasks', JSON.stringify([...allTasks, { id: nanoid(), ...newTask }]))
+        setLoading(true)
+    }
+
+    function fetchTasks() {
+        setLoading(false)
+        const tasks = JSON.parse(localStorage.getItem('tasks'));
+        setTasks(tasks)
+    }
+
+    function InitStorage() {
+
+        if (!localStorage.length) {
+            const f_keys = Object.keys(allFilters.custom);
+            const _filters = f_keys.map((key => ({ id: nanoid(), title: key, sortedBy: "Date" })))
+            localStorage.setItem("lists", JSON.stringify(
                 {
-                    filters: lists.filters.map(list => ({
-                        ...list,
-                        ...allFilters[list.title]
-                    })),
-                    containers: lists.containers.map(list => ({
-                        ...list,
-                        ...allFilters.default(list.title)
-                    }))
+                    filters: _filters,
+                    containers: [{ id: nanoid(), title: 'default', sortedBy: "Date" }]
                 }
             ))
-
-        } catch (err) {
-            console.log(`request unsuccessful : ${err}`)
+            localStorage.setItem('tasks', JSON.stringify([]))
         }
     }
+    useEffect(() => {
+        InitStorage()
+        setLoading(true)
+    }, [])
 
     useEffect(() => {
         if (loading) {
             fetchLists()
+            fetchTasks()
         }
     }, [loading])
 
     return (
         <tasksContext.Provider value={{
-            lists, selectedList, selectList, addNewList
+            tasks, lists, selections, selectList, selectTask, getSelectedList, addNewList, addTask
         }}>
             {props.children}
         </tasksContext.Provider>
