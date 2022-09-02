@@ -1,12 +1,7 @@
-import { useContext, useState } from 'react'
-import { tasksContext } from './contexts/context'
+import React, { useState } from 'react'
+function TaskForm(props) {
+    const [taskInfo, setTaskInfo] = useState(props.task)
 
-function ListForm(props) {
-    const { addNewList } = useContext(tasksContext)
-    const [listInfo, setListInfo] = useState({
-        title: '',
-        description: ''
-    })
     function handleChange(event) {
         const { name, value } = event.target
         setListInfo(prevInfo => {
@@ -34,6 +29,13 @@ function ListForm(props) {
                         <textarea name="description" value={listInfo.description} onChange={handleChange}
                             rows={4} placeholder='description' className='textbox' />
                     </label>
+                    {
+                        taskInfo.list ? ''
+                            : <label>
+                                <h4>parentList:</h4>
+                                <input type="selection" />
+                            </label>
+                    }
                 </section>
                 <input className='form--submit' type='submit' value='Submit' />
             </form>

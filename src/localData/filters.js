@@ -1,21 +1,36 @@
-import { nanoid } from "nanoid";
 
-const allFilters = [
-    {
-        id: nanoid(),
-        label: "Today",
-        fn: (task) => {
-            //before end of the day
-            return true
+const defaultTask = {
+    title: '',
+    description: '',
+    parentList: '',
+    forToday: false,
+    isImportant: false,
+}
+
+const allFilters = {
+    "Important": {
+        filterMethod: task => task.isImportant,
+        factoryTask: {
+            ...defaultTask,
+            isImportant: true
         }
     },
-    {
-        id: nanoid(),
-        label: "This Week",
-        fn: (task) => {
-            //before end of this week
-            return true
+    "My Day": {
+        filterMethod: task => task.onMyDay,
+        factoryTask: {
+            ...defaultTask,
+            forToday: true
+        }
+    },
+    default: (Title) => {
+        return {
+            filterMethod: task => task.title === Title,
+            factoryTask: {
+                ...defaultTask,
+                parentList: Title
+            }
         }
     }
-]
+}
+
 export default allFilters

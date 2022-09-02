@@ -1,28 +1,16 @@
 import React, { useState, createContext, useEffect } from "react";
-import { nanoid } from "nanoid";
-const tasksContext = createContext();
+import allFilters from "../localData/filters"
 
+const tasksContext = createContext();
 function TasksProvider(props) {
 
     const [tasks, setTasks] = useState([])
     const [lists, setLists] = useState([])
-    const [displayTasks, setDisplayTasks] = useState([])
     const [loading, setLoading] = useState(true)
     const [selectedList, setSelectedList] = useState(null)
 
     function selectList(id) {
         setSelectedList(id)
-    }
-
-    function filterTasksByList(listName) {
-        const filteredTasks = tasks.filter(task => task.category === listName)
-        setDisplayTasks(filteredTasks)
-    }
-
-
-    function filterTasksByFunc(fn) {
-        const filteredTasks = tasks.filter(fn)
-        setDisplayTasks(filteredTasks)
     }
 
     async function addNewList(newList) {
@@ -47,7 +35,19 @@ function TasksProvider(props) {
         try {
             const response = await fetch('http://localhost:5000/lists')
             const lists = await response.json()
-            setLists(lists)
+            setLists(() => (
+                {
+                    filters: lists.filters.map(list => ({
+                        ...list,
+                        ...allFilters[list.title]
+                    })),
+                    containers: lists.containers.map(list => ({
+                        ...list,
+                        ...allFilters.default(list.title)
+                    }))
+                }
+            ))
+
         } catch (err) {
             console.log(`request unsuccessful : ${err}`)
         }
@@ -59,15 +59,10 @@ function TasksProvider(props) {
         }
     }, [loading])
 
-    useEffect(() => {
-        const _list = lists.find(list => list.id === selectedList)
-        if (_list) {
-            filterTasksByList(_list.title)
-        }
-    }, [selectedList])
-
     return (
-        <tasksContext.Provider value={{ displayTasks, lists, selectList, selectedList, filterTasksByFunc, addNewList }}>
+        <tasksContext.Provider value={{
+            lists, selectedList, selectList, addNewList
+        }}>
             {props.children}
         </tasksContext.Provider>
     )
