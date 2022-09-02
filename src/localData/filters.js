@@ -3,8 +3,8 @@ const defaultTask = {
     title: '',
     description: '',
     parentList: '',
-    forToday: false,
     isImportant: false,
+    dueTime: ''
 }
 
 const allFilters = {

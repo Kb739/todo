@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid'
 import React, { useContext } from 'react'
-import Card from './card'
+import Card from './taskCard'
 import TaskForm from "./taskForm"
 import useToggle from './customHooks/switch'
 import { tasksContext } from './contexts/context'
@@ -20,7 +20,7 @@ function Content() {
             <li key={task.id} className={classname} onClick={() => {
                 selectTask(task.id);
             }} >
-                <Card label={task.title} /></li>
+                <Card label={task.title} time={task.dueTime} /></li>
         )
     })
 

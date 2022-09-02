@@ -5,15 +5,20 @@ function TaskForm(props) {
     const { lists, getSelectedList, addTask } = useContext(tasksContext)
     const { factoryTask } = getSelectedList()
 
-    const [taskInfo, setTaskInfo] = useState(factoryTask)
+    const [taskInfo, setTaskInfo] = useState({
+        ...factoryTask,
+        parentList: factoryTask.parentList || 'default'
+    })
+
     const listSelectOptions = lists.containers.map(list => <option key={list.id} value={list.title}>{list.title}</option>)
 
     function handleChange(event) {
         const { name, value } = event.target
+        const v = name === 'dueTime' ? new Date(value).getTime() : value;
         setTaskInfo(prevInfo => {
             return {
                 ...prevInfo,
-                [name]: value
+                [name]: v
             }
         })
     }
@@ -36,11 +41,12 @@ function TaskForm(props) {
                         <textarea name="description" value={taskInfo.description} onChange={handleChange}
                             rows={4} placeholder='description' className='textbox' />
                     </label>
+                    <input type='date' name='dueTime' onChange={handleChange} />
                     {
                         factoryTask.parentList ? ''
                             : <label>
                                 <h4>parentList:</h4>
-                                <select name='parentList' value='default' onChange={handleChange} >
+                                <select name='parentList' value={taskInfo.parentList} onChange={handleChange} >
                                     {listSelectOptions}
                                 </select>
                             </label>
