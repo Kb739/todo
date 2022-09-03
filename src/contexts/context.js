@@ -28,6 +28,9 @@ function TasksProvider(props) {
         return combinedList.find(list => list.id === selections.listID)
     }
 
+    function getSelectedTask() {
+        return tasks.find(task => task.id === selections.taskID)
+    }
     function addNewList(newList) {
         const prev = JSON.parse(localStorage.getItem('lists'))
         const updatedList = {
@@ -41,7 +44,6 @@ function TasksProvider(props) {
     function fetchLists() {
         setLoading(false)
         const lists = JSON.parse(localStorage.getItem('lists'));
-        console.log(lists)
         setLists(() => (
             {
                 filters: lists.filters.map(list => ({
@@ -60,6 +62,13 @@ function TasksProvider(props) {
     function addTask(newTask) {
         const allTasks = JSON.parse(localStorage.getItem('tasks'))
         localStorage.setItem('tasks', JSON.stringify([...allTasks, { id: nanoid(), ...newTask }]))
+        setLoading(true)
+    }
+
+    function updateTask(editedTask) {
+        const allTasks = JSON.parse(localStorage.getItem('tasks'))
+        const updatedTasks = allTasks.map(task => task.id === editedTask.id ? editedTask : task)
+        localStorage.setItem('tasks', JSON.stringify(updatedTasks))
         setLoading(true)
     }
 
@@ -97,7 +106,11 @@ function TasksProvider(props) {
 
     return (
         <tasksContext.Provider value={{
-            tasks, lists, selections, selectList, selectTask, getSelectedList, addNewList, addTask
+            tasks, lists,
+            selections, selectList, selectTask,
+            getSelectedList, getSelectedTask,
+            addNewList,
+            addTask, updateTask
         }}>
             {props.children}
         </tasksContext.Provider>

@@ -1,4 +1,3 @@
-import { nanoid } from 'nanoid'
 import React, { useContext } from 'react'
 import Card from './taskCard'
 import TaskForm from "./taskForm"
@@ -18,9 +17,10 @@ function Content() {
         const classname = `card card--task ${task.id === selections.taskID ? 'select' : ''}`
         return (
             <li key={task.id} className={classname} onClick={() => {
+                console.log('select')
                 selectTask(task.id);
             }} >
-                <Card label={task.title} time={task.dueTime} /></li>
+                <Card id={task.id} label={task.title} time={task.dueTime} /></li>
         )
     })
 
