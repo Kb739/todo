@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import TaskEdit from "./forms/taskEdit"
 import useToggle from "./customHooks/switch";
 import { tasksContext } from "./contexts/context";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 function Card(props) {
     const { selections: { taskID }, updateTask, removeTask } = useContext(tasksContext)
@@ -36,21 +37,38 @@ function Card(props) {
         removeTask(id)
     }
 
-    const starElement = <p onClick={toggleImportant}>{isImportant ? '+' : '-'}</p>
-    const circleElement = <p onClick={toggleCompletion}>{finished ? '++' : '--'}</p>
+    const starElement = <FontAwesomeIcon onClick={toggleImportant}
+        icon={isImportant ? "fa-star" : "fa-regular fa-star"}
+        color={isImportant ? 'yellow' : 'grey'}
+        size='lg' />
 
+    const circleElement = <FontAwesomeIcon onClick={toggleCompletion}
+        icon={finished ? 'fa-square-check' : 'fa-square'} size='lg'
+        color={finished ? 'lightBlue' : ''}
+        className='pointer' />
+
+    const selected = isSelected();
     return (
-        <div >
-            <h4>
-                {title}
-            </h4>
-            {starElement}
-            {circleElement}
-            <p onClick={deleteTask}>delete</p>
-            <p>{formatTime(dueTime)}</p>
-            {isSelected() ? <button onClick={toggle}>edit</button> : ''}
+        <>
+            <section>
+                <div className="task--head">
+                    {circleElement}
+                    <h4>
+                        {title}
+                    </h4>
+                </div>
+                <p className="task--date">{formatTime(dueTime)}</p>
+            </section>
+            <section>
+                {selected ? <FontAwesomeIcon className="pointer" icon='fa-pen-to-square' size="lg" onClick={toggle} /> : ''}
+                {selected ? <FontAwesomeIcon className="pointer" onClick={deleteTask} icon="fa-trash" /> : ''}
+            </section>
+            <section>
+                {starElement}
+            </section>
+
             {on ? <TaskEdit close={toggle} /> : ''}
-        </div>
+        </>
     )
 }
 export default Card

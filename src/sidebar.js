@@ -12,25 +12,32 @@ function Sidebar() {
         return _list.concat(lists[key])
     }, [])
 
-    const listElements = combinedList.map(list => {
+    let topSection = [], bottomSection = [];
+    combinedList.forEach(list => {
         const classes = `card card--list ${list.id === selections.listID ? 'select' : ''}`
-        return (
+        const element =
             <li key={list.id} className={classes} onClick={() => {
                 selectList(list.id)
             }}>
                 <Card label={list.title} />
             </li >
-        )
+        if (list.editable)
+            bottomSection.push(element)
+        else
+            topSection.push(element)
     })
 
     return (
         <div className='sidebar'>
             <ul className='card-container'>
-                {listElements}
+                {topSection}
             </ul>
-            <button onClick={toggle}>
-                Add list
-            </button>
+            <ul className='card-container scroll'>
+                {bottomSection}
+            </ul>
+            <div className='card card--list' onClick={toggle}>
+                <p style={{ fontSize: '3rem' }}>+</p> Add list
+            </div>
             {on ? <ListForm close={toggle} /> : ''}
         </div>
     )

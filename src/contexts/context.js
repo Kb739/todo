@@ -89,11 +89,11 @@ function TasksProvider(props) {
 
         if (!localStorage.length) {
             const f_keys = Object.keys(allFilters.custom);
-            const _filters = f_keys.map((key => ({ id: nanoid(), title: key, sortedBy: "Date" })))
+            const _filters = f_keys.map((key => ({ id: nanoid(), title: key, sortedBy: "Date", editable: false })))
             localStorage.setItem("lists", JSON.stringify(
                 {
                     filters: _filters,
-                    containers: [{ id: nanoid(), title: 'default', sortedBy: "Date" }]
+                    containers: [{ id: nanoid(), title: 'default', sortedBy: "Date", editable: false }]
                 }
             ))
             localStorage.setItem('tasks', JSON.stringify([]))

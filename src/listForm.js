@@ -5,7 +5,8 @@ function ListForm(props) {
     const { addNewList } = useContext(tasksContext)
     const [listInfo, setListInfo] = useState({
         title: '',
-        description: ''
+        description: '',
+        editable: true
     })
     function handleChange(event) {
         const { name, value } = event.target
