@@ -13,7 +13,6 @@ function Sidebar() {
     }, [])
 
     const listElements = combinedList.map(list => {
-
         const classes = `card card--list ${list.id === selections.listID ? 'select' : ''}`
         return (
             <li key={list.id} className={classes} onClick={() => {

@@ -7,7 +7,7 @@ function TaskEdit(props) {
 
     function handleChange(event) {
         const { name, value } = event.target
-        const v = name === 'dueTime' ? new Date(value).getTime() : value;
+        const v = name === 'dueTime' ? value && new Date(value).getTime() : value;
         setTaskInfo(prevInfo => {
             return {
                 ...prevInfo,
@@ -26,6 +26,12 @@ function TaskEdit(props) {
         props.close();
     }
 
+    function timeToDate(time) {
+        const date = time && new Date(time).toISOString().slice(0, 10);
+        console.log(date)
+        return date;
+    }
+
     return (
         <div className='form--container'>
             <form className='form' onSubmit={handleSubmit}>
@@ -40,7 +46,7 @@ function TaskEdit(props) {
                         <textarea name="description" value={taskInfo.description} onChange={handleChange}
                             rows={4} placeholder='description' className='textbox' />
                     </label>
-                    <input type='date' name='dueTime' onChange={handleChange} />
+                    <input type='date' name='dueTime' value={timeToDate(taskInfo.dueTime)} onChange={handleChange} />
                 </section>
                 <input className='form--submit' type='submit' value='Submit' />
             </form>

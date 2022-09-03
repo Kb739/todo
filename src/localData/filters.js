@@ -4,6 +4,7 @@ const defaultTask = {
     description: '',
     parentList: '',
     isImportant: false,
+    finished: false,
     dueTime: ''
 }
 

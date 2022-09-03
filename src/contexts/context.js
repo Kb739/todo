@@ -72,6 +72,13 @@ function TasksProvider(props) {
         setLoading(true)
     }
 
+    function removeTask(id) {
+        const allTasks = JSON.parse(localStorage.getItem('tasks'))
+        const remainTasks = allTasks.filter(task => task.id !== id)
+        localStorage.setItem('tasks', JSON.stringify(remainTasks))
+        setLoading(true)
+    }
+
     function fetchTasks() {
         setLoading(false)
         const tasks = JSON.parse(localStorage.getItem('tasks'));
@@ -110,7 +117,7 @@ function TasksProvider(props) {
             selections, selectList, selectTask,
             getSelectedList, getSelectedTask,
             addNewList,
-            addTask, updateTask
+            addTask, updateTask, removeTask
         }}>
             {props.children}
         </tasksContext.Provider>

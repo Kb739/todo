@@ -20,7 +20,8 @@ function Content() {
                 console.log('select')
                 selectTask(task.id);
             }} >
-                <Card id={task.id} label={task.title} time={task.dueTime} /></li>
+                <Card task={task} />
+            </li>
         )
     })
 
