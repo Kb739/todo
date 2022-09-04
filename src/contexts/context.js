@@ -116,7 +116,7 @@ function TasksProvider(props) {
         setTasks(tasks)
     }
 
-    function InitStorage() {
+    function initStorage() {
 
         if (!localStorage.length) {
             const f_keys = Object.keys(allFilters.custom);
@@ -124,7 +124,7 @@ function TasksProvider(props) {
             localStorage.setItem("lists", JSON.stringify(
                 {
                     filters: _filters,
-                    containers: [{ id: nanoid(), title: 'default', sortedBy: "Date", editable: false }]
+                    containers: [{ id: nanoid(), title: 'My Tasks', sortedBy: "Date", editable: false }]
                 }
             ))
             localStorage.setItem('tasks', JSON.stringify([]))
@@ -132,7 +132,12 @@ function TasksProvider(props) {
     }
 
     useEffect(() => {
-        InitStorage()
+        initStorage()
+        const initSelection = () => {
+            const initialId = JSON.parse(localStorage.getItem('lists')).containers[0].id
+            setSelections({ listID: initialId, taskID: null })
+        }
+        initSelection();
         setLoading(true)
     }, [])
 

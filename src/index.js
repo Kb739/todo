@@ -4,9 +4,9 @@ import App from "./App.js"
 import { TasksProvider } from './contexts/context'
 import { LayoutProvider } from "./contexts/layoutContext.js";
 import { library } from "@fortawesome/fontawesome-svg-core"
-import { faPenToSquare, faSquare, faSquareCheck, faTrash, faStar, faBars, faXmark } from "@fortawesome/free-solid-svg-icons"
-import { faStar as faStarR } from "@fortawesome/free-regular-svg-icons"
-library.add(faPenToSquare, faSquare, faSquareCheck, faTrash, faStar, faStarR, faBars, faXmark)
+import { faPenToSquare, faSquare, faSquareCheck, faTrash, faStar, faBars, faXmark, } from "@fortawesome/free-solid-svg-icons"
+import { faStar as faStarR, faFile } from "@fortawesome/free-regular-svg-icons"
+library.add(faPenToSquare, faSquare, faSquareCheck, faTrash, faStar, faStarR, faBars, faXmark, faFile)
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(

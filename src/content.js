@@ -4,6 +4,7 @@ import TaskForm from "./forms/taskForm"
 import useToggle from './customHooks/switch'
 import { tasksContext } from './contexts/context'
 import { layoutContext } from './contexts/layoutContext'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 function Content() {
     const { tasks, selections, getSelectedList, selectTask } = useContext(tasksContext)
@@ -34,7 +35,11 @@ function Content() {
                 {selectedList && selectedList.title}
             </h1>
             <ul className='card-container scroll'>
-                {taskElements}
+                {taskElements.length ? taskElements
+                    : <div className='empty'>
+                        <h4>Empty!</h4>
+                        <FontAwesomeIcon icon="fa-regular fa-file" size='10x' />
+                    </div>}
             </ul>
             {collapseClass ?
                 (selections.listID ? <div className='add-task pointer' onClick={toggle}>
