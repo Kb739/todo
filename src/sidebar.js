@@ -3,9 +3,11 @@ import Card from './card'
 import ListForm from "./listForm"
 import useToggle from './customHooks/switch'
 import { tasksContext } from './contexts/context'
+import { layoutContext } from "./contexts/layoutContext";
 
 function Sidebar() {
     const { lists, selections, selectList } = useContext(tasksContext)
+    const { collapseClass } = useContext(layoutContext)
     const { on, toggle } = useToggle(false)
 
     const combinedList = Object.keys(lists).reduce((_list, key) => {
@@ -14,7 +16,7 @@ function Sidebar() {
 
     let topSection = [], bottomSection = [];
     combinedList.forEach(list => {
-        const classes = `card card--list ${list.id === selections.listID ? 'select' : ''}`
+        const classes = `card card--list collapser ${list.id === selections.listID ? 'select' : ''}`
         const element =
             <li key={list.id} className={classes} onClick={() => {
                 selectList(list.id)
@@ -28,7 +30,7 @@ function Sidebar() {
     })
 
     return (
-        <div className='sidebar'>
+        <div className={`sidebar ${collapseClass}`}>
             <ul className='card-container'>
                 {topSection}
             </ul>

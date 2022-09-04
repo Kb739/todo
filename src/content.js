@@ -3,9 +3,11 @@ import Card from './taskCard'
 import TaskForm from "./taskForm"
 import useToggle from './customHooks/switch'
 import { tasksContext } from './contexts/context'
+import { layoutContext } from './contexts/layoutContext'
 
 function Content() {
     const { tasks, selections, getSelectedList, selectTask } = useContext(tasksContext)
+    const { collapseClass } = useContext(layoutContext)
     const selectedList = getSelectedList();
     const { on, toggle } = useToggle(false);
 
@@ -26,7 +28,7 @@ function Content() {
     })
 
     return (
-        <div className='content'>
+        <div className='content collapser'>
             <section className='content--tasks'>
                 <h1 className='content--title'>
                     {selectedList && selectedList.title}
@@ -36,8 +38,10 @@ function Content() {
                 </ul>
             </section>
 
-            {selections.listID ? <div className='add-task pointer' onClick={toggle}>
-                <p style={{ fontSize: '2rem' }}>+</p> Add Task</div> : ''}
+            {collapseClass ?
+                (selections.listID ? <div className='add-task pointer' onClick={toggle}>
+                    <p style={{ fontSize: '2rem' }}>+</p> Add Task</div> : '') : ''
+            }
             {on ? <TaskForm close={toggle} /> : ''}
         </div>
     )

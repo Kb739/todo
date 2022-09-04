@@ -1,5 +1,6 @@
 html {
     --bg-color: rgb(40, 40, 40);
+    --bg-content: rgb(110, 201, 223);
     --selection-color: rgb(60, 60, 60, 0.95);
     --shadow: 0 5px 10px black;
 }
@@ -35,6 +36,16 @@ body {
     display: grid;
     grid-template-rows: 0.5fr 2fr 0.25fr;
     overflow: auto;
+    /* border: 1px solid green; */
+}
+
+.sidebar-button {
+    display: none;
+    position: absolute;
+    left: 40px;
+    top: 10px;
+    font-size: 2rem;
+    color: var(--bg-content);
 }
 
 .content {
@@ -43,16 +54,32 @@ body {
     flex-direction: column;
     padding: 50px;
     margin-top: 50px;
-    background-color: rgb(110, 201, 223);
+    background-color: var(--bg-content);
     overflow: hidden;
 }
 
 @media screen and (max-width:550px) {
     .sidebar {
+        position: absolute;
+        margin: 0;
+        top: 5.5%;
+        left: 0.5%;
+        max-height: 94vh;
+        width: 90%;
+        background-color: var(--bg-color);
+        border-radius: 5px;
+    }
+
+    .sidebar-button {
+        display: block;
+    }
+
+    .collapse {
         display: none;
     }
 
     #main {
+        position: relative;
         grid-template-columns: auto;
     }
 
