@@ -1,3 +1,4 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useContext, useState } from 'react'
 import { tasksContext } from '../contexts/context'
 
@@ -28,25 +29,28 @@ function TaskEdit(props) {
 
     function timeToDate(time) {
         const date = time && new Date(time).toISOString().slice(0, 10);
-        console.log(date)
         return date;
     }
 
     return (
         <div className='form--container'>
             <form className='form' onSubmit={handleSubmit}>
-                <div className='form--cancel' onClick={cancel}>X</div>
+                <FontAwesomeIcon className='form--cancel pointer' icon='fa-xmark' size='xl' color='red' onClick={cancel} />
                 <section>
                     <label className='input'>
                         <h4 className='input--label'>Name:</h4>
-                        <input type='text' name="title" value={taskInfo.title} onChange={handleChange} className='textbox' />
+                        <input type='text' name="title" value={taskInfo.title} onChange={handleChange} className='textbox' required={true} />
                     </label>
                     <label className='input'>
                         <h4 className='input--label'>Description:</h4>
                         <textarea name="description" value={taskInfo.description} onChange={handleChange}
                             rows={4} placeholder='description' className='textbox' />
                     </label>
-                    <input type='date' name='dueTime' value={timeToDate(taskInfo.dueTime)} onChange={handleChange} />
+                    <label className='input'>
+                        <h4 className='input--label'>Date:</h4>
+                        <input type='date' name='dueTime' value={timeToDate(taskInfo.dueTime)} onChange={handleChange} />
+                    </label>
+
                 </section>
                 <input className='form--submit' type='submit' value='Submit' />
             </form>

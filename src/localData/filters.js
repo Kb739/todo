@@ -11,19 +11,19 @@ const defaultTask = {
 const allFilters = {
     custom: {
         "Important": {
-            filterMethod: task => task.isImportant,
+            filterMethod: task => task.isImportant && !task.finished,
             factoryTask: {
                 ...defaultTask,
                 isImportant: true
             }
         }
     },
-    default: (Title) => {
+    default: (parentId) => {
         return {
-            filterMethod: task => task.parentList === Title,
+            filterMethod: task => task.parentList === parentId,
             factoryTask: {
                 ...defaultTask,
-                parentList: Title
+                parentList: parentId
             }
         }
     }

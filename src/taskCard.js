@@ -37,12 +37,15 @@ function Card(props) {
         removeTask(id)
     }
 
+    function overDue() {
+        return dueTime < new Date().getTime();
+    }
     const starElement = <FontAwesomeIcon onClick={toggleImportant}
         icon={isImportant ? "fa-star" : "fa-regular fa-star"}
         color={isImportant ? 'yellow' : 'grey'}
         size='lg' />
 
-    const circleElement = <FontAwesomeIcon onClick={toggleCompletion}
+    const checkElement = <FontAwesomeIcon onClick={toggleCompletion}
         icon={finished ? 'fa-square-check' : 'fa-square'} size='lg'
         color={finished ? 'lightBlue' : ''}
         className='pointer' />
@@ -52,12 +55,12 @@ function Card(props) {
         <>
             <section>
                 <div className="task--head">
-                    {circleElement}
+                    {checkElement}
                     <h4>
                         {title}
                     </h4>
                 </div>
-                <p className="task--date">{formatTime(dueTime)}</p>
+                <p className="task--date" style={{ color: overDue() ? 'red' : '' }}>{formatTime(dueTime)}</p>
             </section>
             <section>
                 {selected ? <FontAwesomeIcon className="pointer" icon='fa-pen-to-square' size="lg" onClick={toggle} /> : ''}

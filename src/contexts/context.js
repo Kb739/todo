@@ -31,15 +31,46 @@ function TasksProvider(props) {
     function getSelectedTask() {
         return tasks.find(task => task.id === selections.taskID)
     }
+
     function addNewList(newList) {
         const prev = JSON.parse(localStorage.getItem('lists'))
+        const id = nanoid();
         const updatedList = {
             ...prev,
-            containers: [...prev.containers, { ...newList, id: nanoid() }]
+            containers: [...prev.containers, { ...newList, id }]
         }
         localStorage.setItem('lists', JSON.stringify(updatedList))
+        selectList(id)
         setLoading(true)
     }
+
+    function updateList(list) {
+        const prev = JSON.parse(localStorage.getItem('lists'))
+        const editedList = {
+            ...prev,
+            containers: prev.containers.map(element => list.id === element.id ? list : element)
+        }
+        localStorage.setItem('lists', JSON.stringify(editedList))
+        setLoading(true)
+    }
+
+    function removeList(id) {
+        const prev = JSON.parse(localStorage.getItem('lists'))
+        const editedList = {
+            ...prev,
+            containers: prev.containers.filter(element => id !== element.id)
+        }
+        const nonChildTasks = JSON.parse(localStorage.getItem('tasks')).filter(task => task.parentList !== id);
+        localStorage.setItem('tasks', JSON.stringify(nonChildTasks))
+        localStorage.setItem('lists', JSON.stringify(editedList))
+
+        if (selections.listID === id) {
+            const index = lists.containers.findIndex(list => list.id === id);
+            selectList(lists.containers[index - 1].id)
+        }
+        setLoading(true)
+    }
+
 
     function fetchLists() {
         setLoading(false)
@@ -52,7 +83,7 @@ function TasksProvider(props) {
                 })),
                 containers: lists.containers.map(list => ({
                     ...list,
-                    ...allFilters.default(list.title)
+                    ...allFilters.default(list.id)
                 }))
             }
         ))
@@ -61,7 +92,7 @@ function TasksProvider(props) {
 
     function addTask(newTask) {
         const allTasks = JSON.parse(localStorage.getItem('tasks'))
-        localStorage.setItem('tasks', JSON.stringify([...allTasks, { id: nanoid(), ...newTask }]))
+        localStorage.setItem('tasks', JSON.stringify([{ id: nanoid(), ...newTask }, ...allTasks]))
         setLoading(true)
     }
 
@@ -99,6 +130,7 @@ function TasksProvider(props) {
             localStorage.setItem('tasks', JSON.stringify([]))
         }
     }
+
     useEffect(() => {
         InitStorage()
         setLoading(true)
@@ -116,7 +148,7 @@ function TasksProvider(props) {
             tasks, lists,
             selections, selectList, selectTask,
             getSelectedList, getSelectedTask,
-            addNewList,
+            addNewList, updateList, removeList,
             addTask, updateTask, removeTask
         }}>
             {props.children}

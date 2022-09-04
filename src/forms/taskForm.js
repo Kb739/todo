@@ -1,16 +1,18 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useContext, useState } from 'react'
-import { tasksContext } from './contexts/context'
+import { tasksContext } from '../contexts/context'
 
 function TaskForm(props) {
     const { lists, getSelectedList, addTask } = useContext(tasksContext)
+    const defaultParent = lists.containers[0].id;
     const { factoryTask } = getSelectedList()
 
     const [taskInfo, setTaskInfo] = useState({
         ...factoryTask,
-        parentList: factoryTask.parentList || 'default'
+        parentList: factoryTask.parentList || defaultParent
     })
 
-    const listSelectOptions = lists.containers.map(list => <option key={list.id} value={list.title}>{list.title}</option>)
+    const listSelectOptions = lists.containers.map(list => <option key={list.id} value={list.id}>{list.title}</option>)
 
     function handleChange(event) {
         const { name, value } = event.target
@@ -28,23 +30,32 @@ function TaskForm(props) {
         addTask(taskInfo)
         props.close()
     }
+
+    function cancel() {
+        props.close();
+    }
     return (
         <div className='form--container'>
             <form className='form' onSubmit={handleSubmit}>
+                <FontAwesomeIcon className='form--cancel pointer' icon='fa-xmark' size='xl' color='red' onClick={cancel} />
                 <section>
                     <label className='input'>
                         <h4 className='input--label'>Name:</h4>
-                        <input type='text' name="title" value={taskInfo.title} onChange={handleChange} className='textbox' />
+                        <input type='text' name="title" value={taskInfo.title} onChange={handleChange} className='textbox' required={true} />
                     </label>
                     <label className='input'>
                         <h4 className='input--label'>Description:</h4>
                         <textarea name="description" value={taskInfo.description} onChange={handleChange}
                             rows={4} placeholder='description' className='textbox' />
                     </label>
-                    <input type='date' name='dueTime' onChange={handleChange} />
+                    <label className='input'>
+                        <h4 className='input--label'>Date:</h4>
+                        <input type='date' name='dueTime' onChange={handleChange} />
+                    </label>
+
                     {
                         factoryTask.parentList ? ''
-                            : <label>
+                            : <label className='input'>
                                 <h4>parentList:</h4>
                                 <select name='parentList' value={taskInfo.parentList} onChange={handleChange} >
                                     {listSelectOptions}

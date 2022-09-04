@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
-import Card from './card'
-import ListForm from "./listForm"
+import Card from './listCard'
+import ListForm from "./forms/listForm"
 import useToggle from './customHooks/switch'
 import { tasksContext } from './contexts/context'
 import { layoutContext } from "./contexts/layoutContext";
@@ -21,7 +21,7 @@ function Sidebar() {
             <li key={list.id} className={classes} onClick={() => {
                 selectList(list.id)
             }}>
-                <Card label={list.title} />
+                <Card list={list} />
             </li >
         if (list.editable)
             bottomSection.push(element)
@@ -37,7 +37,7 @@ function Sidebar() {
             <ul className='card-container scroll'>
                 {bottomSection}
             </ul>
-            <div className='card card--list' onClick={toggle}>
+            <div className='add-list' onClick={toggle}>
                 <p style={{ fontSize: '3rem' }}>+</p> Add list
             </div>
             {on ? <ListForm close={toggle} /> : ''}
